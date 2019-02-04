@@ -155,6 +155,7 @@ add_executable(nothing_test
   test/main.c
   test/test.h
   test/tokenizer_suite.h
+  #   test/try_ecl.h
   )
 
 target_link_libraries(nothing ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY} m system ebisp)
@@ -192,6 +193,7 @@ if(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" ST
      -fno-common \
      -pedantic \
      -std=gnu11 \
+     -lecl \
      -O3")
   target_link_libraries(nothing m)
 endif()

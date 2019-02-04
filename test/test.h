@@ -1,6 +1,20 @@
 #ifndef TEST_H_
 #define TEST_H_
 
+#define TRY_OUT_ECL_COMPILATION
+#ifdef TRY_OUT_ECL_COMPILATION
+// It is necessary to have ecl library installed.
+// For installing, see the following:
+//	https://www.archlinux.org/packages/?name=ecl
+// 	https://common-lisp.net/project/ecl/static/files/
+// 	https://common-lisp.net/project/ecl/static/manual/pr01s06.html
+//
+// An article about ecl with C++:
+// 	https://chriskohlhepp.wordpress.com/advanced-c-lisp/embedding-lisp-in-cplusplus-a-recipe/
+// Some ecl related syntax can be seen in the article.
+#include <ecl/ecl.h>
+#endif
+
 #include "math.h"
 
 #define TEST_RUN(name)                          \
