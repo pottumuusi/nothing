@@ -19,7 +19,7 @@
 typedef enum Game_state {
     GAME_STATE_RUNNING = 0,
     GAME_STATE_PAUSE,
-    GAME_STATE_CONSOLE,
+    GAME_STATE_EBISP_CONSOLE,
     GAME_STATE_LEVEL_PICKER,
     GAME_STATE_QUIT
 } Game_state;
@@ -144,7 +144,7 @@ int game_render(const Game *game)
         }
     } break;
 
-    case GAME_STATE_CONSOLE: {
+    case GAME_STATE_EBISP_CONSOLE: {
         if (level_render(game->level, game->camera) < 0) {
             return -1;
         }
@@ -171,7 +171,7 @@ int game_sound(Game *game)
     switch (game->state) {
     case GAME_STATE_RUNNING:
     case GAME_STATE_PAUSE:
-    case GAME_STATE_CONSOLE:
+    case GAME_STATE_EBISP_CONSOLE:
         return level_sound(game->level, game->sound_samples);
     case GAME_STATE_LEVEL_PICKER:
     case GAME_STATE_QUIT:
@@ -198,7 +198,7 @@ int game_update(Game *game, float delta_time)
 
     } break;
 
-    case GAME_STATE_CONSOLE: {
+    case GAME_STATE_EBISP_CONSOLE: {
         if (level_update(game->level, delta_time) < 0) {
             return -1;
         }
@@ -332,7 +332,7 @@ static int game_event_running(Game *game, const SDL_Event *event)
         case SDLK_BACKQUOTE:
         case SDLK_c:
             SDL_StartTextInput();
-            game->state = GAME_STATE_CONSOLE;
+            game->state = GAME_STATE_EBISP_CONSOLE;
             console_slide_down(game->console);
             break;
         }
@@ -393,7 +393,7 @@ int game_event(Game *game, const SDL_Event *event)
     case GAME_STATE_PAUSE:
         return game_event_pause(game, event);
 
-    case GAME_STATE_CONSOLE:
+    case GAME_STATE_EBISP_CONSOLE:
         return game_event_console(game, event);
 
     case GAME_STATE_LEVEL_PICKER:
@@ -416,7 +416,7 @@ int game_input(Game *game,
     switch (game->state) {
     case GAME_STATE_QUIT:
     case GAME_STATE_PAUSE:
-    case GAME_STATE_CONSOLE:
+    case GAME_STATE_EBISP_CONSOLE:
         return 0;
 
     case GAME_STATE_RUNNING:

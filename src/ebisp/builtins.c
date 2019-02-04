@@ -54,7 +54,7 @@ bool equal(struct Expr obj1, struct Expr obj2)
     case EXPR_ATOM:
         return equal_atoms(obj1.atom, obj2.atom);
 
-    case EXPR_CONS:
+    case EXPR_EBISP_CONS:
         return equal_cons(obj1.cons, obj2.cons);
 
     case EXPR_VOID:
@@ -91,7 +91,7 @@ bool string_p(struct Expr obj)
 
 bool cons_p(struct Expr obj)
 {
-    return obj.type == EXPR_CONS;
+    return obj.type == EXPR_EBISP_CONS;
 }
 
 bool list_p(struct Expr obj)
@@ -100,7 +100,7 @@ bool list_p(struct Expr obj)
         return true;
     }
 
-    if (obj.type == EXPR_CONS) {
+    if (obj.type == EXPR_EBISP_CONS) {
         return list_p(obj.cons->cdr);
     }
 
@@ -113,7 +113,7 @@ bool list_of_symbols_p(struct Expr obj)
         return true;
     }
 
-    if (obj.type == EXPR_CONS && symbol_p(obj.cons->car)) {
+    if (obj.type == EXPR_EBISP_CONS && symbol_p(obj.cons->car)) {
         return list_of_symbols_p(obj.cons->cdr);
     }
 
@@ -141,11 +141,11 @@ long int length_of_list(struct Expr obj)
 struct Expr assoc(struct Expr key, struct Expr alist)
 {
     while (cons_p(alist)) {
-        if (cons_p(CAR(alist)) && equal(CAR(CAR(alist)), key)) {
-            return CAR(alist);
+        if (cons_p(EBISP_CAR(alist)) && equal(EBISP_CAR(EBISP_CAR(alist)), key)) {
+            return EBISP_CAR(alist);
         }
 
-        alist = CDR(alist);
+        alist = EBISP_CDR(alist);
     }
 
     return alist;
@@ -185,25 +185,25 @@ list_rec(Gc *gc, const char *format, va_list args)
     switch (*format) {
     case 'd': {
         long int p = va_arg(args, long int);
-        return CONS(gc, NUMBER(gc, p),
+        return EBISP_CONS(gc, NUMBER(gc, p),
                     list_rec(gc, format + 1, args));
     }
 
     case 's': {
         const char* p = va_arg(args, const char*);
-        return CONS(gc, STRING(gc, p),
+        return EBISP_CONS(gc, STRING(gc, p),
                     list_rec(gc, format + 1, args));
     }
 
     case 'q': {
         const char* p = va_arg(args, const char*);
-        return CONS(gc, SYMBOL(gc, p),
+        return EBISP_CONS(gc, SYMBOL(gc, p),
                     list_rec(gc, format + 1, args));
     }
 
     case 'e': {
         struct Expr p = va_arg(args, struct Expr);
-        return CONS(gc, p, list_rec(gc, format + 1, args));
+        return EBISP_CONS(gc, p, list_rec(gc, format + 1, args));
     }
 
     default: {

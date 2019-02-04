@@ -30,7 +30,7 @@ static struct Expr set_scope_value_impl(Gc *gc, struct Expr scope, struct Expr n
             /* We're at the global scope, add a binding, preserving
              * the identity of the environment list "spine" so that
              * closed-over environments see the new value cell */
-            scope.cons->car = CONS(gc, CONS(gc, name, value), scope.cons->car);
+            scope.cons->car = EBISP_CONS(gc, EBISP_CONS(gc, name, value), scope.cons->car);
 
             return scope;
         } else {
@@ -42,8 +42,8 @@ static struct Expr set_scope_value_impl(Gc *gc, struct Expr scope, struct Expr n
         }
     } else {
         /* ??? Should never happen? */
-        return CONS(gc,
-                    CONS(gc, CONS(gc, name, value), NIL(gc)),
+        return EBISP_CONS(gc,
+                    EBISP_CONS(gc, EBISP_CONS(gc, name, value), NIL(gc)),
                     scope);
     }
 }
@@ -51,7 +51,7 @@ static struct Expr set_scope_value_impl(Gc *gc, struct Expr scope, struct Expr n
 struct Scope create_scope(Gc *gc)
 {
     struct Scope scope = {
-        .expr = CONS(gc, NIL(gc), NIL(gc))
+        .expr = EBISP_CONS(gc, NIL(gc), NIL(gc))
     };
     return scope;
 }
@@ -69,14 +69,14 @@ void push_scope_frame(Gc *gc, struct Scope *scope, struct Expr vars, struct Expr
     struct Expr frame = NIL(gc);
 
     while(!nil_p(vars) && !nil_p(args)) {
-        frame = CONS(gc,
-                     CONS(gc, vars.cons->car, args.cons->car),
+        frame = EBISP_CONS(gc,
+                     EBISP_CONS(gc, vars.cons->car, args.cons->car),
                      frame);
         vars = vars.cons->cdr;
         args = args.cons->cdr;
     }
 
-    scope->expr = CONS(gc, frame, scope->expr);
+    scope->expr = EBISP_CONS(gc, frame, scope->expr);
 }
 
 void pop_scope_frame(Gc *gc, struct Scope *scope)

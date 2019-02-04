@@ -23,14 +23,14 @@ TEST(equal_test)
     });
 
     struct Expr list1 =
-        CONS(gc, SYMBOL(gc, "a"),
-             CONS(gc, SYMBOL(gc, "b"),
-                  CONS(gc, SYMBOL(gc, "c"),
+        EBISP_CONS(gc, SYMBOL(gc, "a"),
+             EBISP_CONS(gc, SYMBOL(gc, "b"),
+                  EBISP_CONS(gc, SYMBOL(gc, "c"),
                        NIL(gc))));
     struct Expr list2 =
-        CONS(gc, SYMBOL(gc, "a"),
-             CONS(gc, SYMBOL(gc, "b"),
-                  CONS(gc, SYMBOL(gc, "c"),
+        EBISP_CONS(gc, SYMBOL(gc, "a"),
+             EBISP_CONS(gc, SYMBOL(gc, "b"),
+                  EBISP_CONS(gc, SYMBOL(gc, "c"),
                        NIL(gc))));
     ASSERT_TRUE(equal(list1, list2), {
             fprintf(stderr, "Expected: ");
@@ -57,14 +57,14 @@ TEST(assoc_test)
     struct Expr b = SYMBOL(gc, "b");
     struct Expr c = SYMBOL(gc, "c");
 
-    struct Expr a_pair = CONS(gc, a, NUMBER(gc, 10.0f));
-    struct Expr b_pair = CONS(gc, b, NUMBER(gc, 20.0f));
-    struct Expr c_pair = CONS(gc, c, NUMBER(gc, 30.0f));
+    struct Expr a_pair = EBISP_CONS(gc, a, NUMBER(gc, 10.0f));
+    struct Expr b_pair = EBISP_CONS(gc, b, NUMBER(gc, 20.0f));
+    struct Expr c_pair = EBISP_CONS(gc, c, NUMBER(gc, 30.0f));
 
     struct Expr alist =
-        CONS(gc, a_pair,
-             CONS(gc, b_pair,
-                  CONS(gc, c_pair, nil)));
+        EBISP_CONS(gc, a_pair,
+             EBISP_CONS(gc, b_pair,
+                  EBISP_CONS(gc, c_pair, nil)));
 
     struct Expr assoc_result = assoc(a, alist);
 
@@ -92,7 +92,7 @@ TEST(match_list_test)
         42,
         "hello",
         "world",
-        CONS(gc, NUMBER(gc, 1), NUMBER(gc, 2)));
+        EBISP_CONS(gc, NUMBER(gc, 1), NUMBER(gc, 2)));
 
     long int d = 0;
     const char *s = NULL;
@@ -115,9 +115,9 @@ TEST(match_list_test)
     ASSERT_TRUE(strcmp(q, "world") == 0, {
         fprintf(stderr, "Expected: world, Actual: %s\n", q);
     });
-    ASSERT_TRUE(equal(e, CONS(gc, NUMBER(gc, 1), NUMBER(gc, 2))), {
+    ASSERT_TRUE(equal(e, EBISP_CONS(gc, NUMBER(gc, 1), NUMBER(gc, 2))), {
             fprintf(stderr, "Expected: ");
-            print_expr_as_sexpr(stderr, CONS(gc, NUMBER(gc, 1), NUMBER(gc, 2)));
+            print_expr_as_sexpr(stderr, EBISP_CONS(gc, NUMBER(gc, 1), NUMBER(gc, 2)));
             fprintf(stderr, ", Actual: ");
             print_expr_as_sexpr(stderr, e);
             fprintf(stderr, "\n");

@@ -14,7 +14,7 @@ TEST(set_scope_value_test)
     struct Expr y = SYMBOL(gc, "y");
 
     struct Scope scope = {
-        .expr = CONS(gc, NIL(gc), NIL(gc))
+        .expr = EBISP_CONS(gc, NIL(gc), NIL(gc))
     };
 
     push_scope_frame(gc, &scope,
@@ -23,11 +23,11 @@ TEST(set_scope_value_test)
 
     set_scope_value(gc, &scope, z, STRING(gc, "foo"));
 
-    ASSERT_TRUE(equal(CONS(gc, x, STRING(gc, "hello")), get_scope_value(&scope, x)),
+    ASSERT_TRUE(equal(EBISP_CONS(gc, x, STRING(gc, "hello")), get_scope_value(&scope, x)),
                 { fprintf(stderr, "Unexpected value of `x`\n"); });
-    ASSERT_TRUE(equal(CONS(gc, y, STRING(gc, "world")), get_scope_value(&scope, y)),
+    ASSERT_TRUE(equal(EBISP_CONS(gc, y, STRING(gc, "world")), get_scope_value(&scope, y)),
                 { fprintf(stderr, "Unexpected value of `y`\n"); });
-    ASSERT_TRUE(equal(CONS(gc, z, STRING(gc, "foo")), get_scope_value(&scope, z)),
+    ASSERT_TRUE(equal(EBISP_CONS(gc, z, STRING(gc, "foo")), get_scope_value(&scope, z)),
                 { fprintf(stderr, "Unexpected value of `z`\n"); });
 
     pop_scope_frame(gc, &scope);
@@ -36,7 +36,7 @@ TEST(set_scope_value_test)
                 { fprintf(stderr, "Unexpected value of `x`\n"); });
     ASSERT_TRUE(equal(NIL(gc), get_scope_value(&scope, y)),
                 { fprintf(stderr, "Unexpected value of `y`\n"); });
-    ASSERT_TRUE(equal(CONS(gc, z, STRING(gc, "foo")), get_scope_value(&scope, z)),
+    ASSERT_TRUE(equal(EBISP_CONS(gc, z, STRING(gc, "foo")), get_scope_value(&scope, z)),
                 { fprintf(stderr, "Unexpected value of `z`\n"); });
 
 

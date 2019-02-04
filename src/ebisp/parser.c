@@ -232,7 +232,7 @@ struct ParseResult read_all_exprs_from_string(Gc *gc, const char *str)
             return parse_result;
         }
 
-        cons->cdr = CONS(gc, parse_result.expr, void_expr());
+        cons->cdr = EBISP_CONS(gc, parse_result.expr, void_expr());
         cons = cons->cdr.cons;
         current_token = next_token(parse_result.end);
     }

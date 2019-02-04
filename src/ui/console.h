@@ -1,5 +1,5 @@
-#ifndef CONSOLE_H_
-#define CONSOLE_H_
+#ifndef EBISP_CONSOLE_H_
+#define EBISP_CONSOLE_H_
 
 #include <SDL2/SDL.h>
 #include "ebisp/interpreter.h"
@@ -24,4 +24,4 @@ int console_update(Console *console,
 
 void console_slide_down(Console *console);
 
-#endif  // CONSOLE_H_
+#endif  // EBISP_CONSOLE_H_

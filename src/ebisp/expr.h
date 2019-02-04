@@ -15,17 +15,17 @@ struct Atom;
 #define STRING(G, S) atom_as_expr(create_string_atom(G, S, NULL))
 #define SYMBOL(G, S) atom_as_expr(create_symbol_atom(G, S, NULL))
 #define NATIVE(G, F, P) atom_as_expr(create_native_atom(G, F, P))
-#define CONS(G, CAR, CDR) cons_as_expr(create_cons(G, CAR, CDR))
+#define EBISP_CONS(G, EBISP_CAR, EBISP_CDR) cons_as_expr(create_cons(G, EBISP_CAR, EBISP_CDR))
 #define NIL(G) SYMBOL(G, "nil")
 #define T(G) SYMBOL(G, "t")
 
-#define CAR(O) ((O).cons->car)
-#define CDR(O) ((O).cons->cdr)
+#define EBISP_CAR(O) ((O).cons->car)
+#define EBISP_CDR(O) ((O).cons->cdr)
 
 enum ExprType
 {
     EXPR_ATOM = 0,
-    EXPR_CONS,
+    EXPR_EBISP_CONS,
     EXPR_VOID
 };
 

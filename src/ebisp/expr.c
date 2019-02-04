@@ -22,7 +22,7 @@ struct Expr atom_as_expr(struct Atom *atom)
 struct Expr cons_as_expr(struct Cons *cons)
 {
     struct Expr expr = {
-        .type = EXPR_CONS,
+        .type = EXPR_EBISP_CONS,
         .cons = cons
     };
 
@@ -85,9 +85,9 @@ static void print_atom_as_c(FILE *stream, struct Atom *atom)
         break;
 
     case ATOM_LAMBDA:
-        fprintf(stream, "CONS(gc, SYMBOL(gc, \"lambda\"), CONS(gc, ");
+        fprintf(stream, "EBISP_CONS(gc, SYMBOL(gc, \"lambda\"), EBISP_CONS(gc, ");
         print_expr_as_c(stream, atom->lambda.args_list);
-        fprintf(stream, ", CONS(gc, ");
+        fprintf(stream, ", EBISP_CONS(gc, ");
         print_expr_as_c(stream, atom->lambda.body);
         fprintf(stream, ")))");
         break;
@@ -107,7 +107,7 @@ void print_cons_as_sexpr(FILE *stream, struct Cons *head)
     fprintf(stream, "(");
     print_expr_as_sexpr(stream, cons->car);
 
-    while (cons->cdr.type == EXPR_CONS) {
+    while (cons->cdr.type == EXPR_EBISP_CONS) {
         cons = cons->cdr.cons;
         fprintf(stream, " ");
         print_expr_as_sexpr(stream, cons->car);
@@ -127,7 +127,7 @@ static void print_cons_as_c(FILE *stream, struct Cons *cons)
     trace_assert(stream);
     trace_assert(cons);
 
-    fprintf(stream, "CONS(gc, ");
+    fprintf(stream, "EBISP_CONS(gc, ");
     print_expr_as_c(stream, cons->car);
     fprintf(stream, ", ");
     print_expr_as_c(stream, cons->cdr);
@@ -141,7 +141,7 @@ void print_expr_as_sexpr(FILE *stream, struct Expr expr)
         print_atom_as_sexpr(stream, expr.atom);
         break;
 
-    case EXPR_CONS:
+    case EXPR_EBISP_CONS:
         print_cons_as_sexpr(stream, expr.cons);
         break;
 
@@ -160,7 +160,7 @@ void print_expr_as_c(FILE *stream, struct Expr expr)
         print_atom_as_c(stream, expr.atom);
         break;
 
-    case EXPR_CONS:
+    case EXPR_EBISP_CONS:
         print_cons_as_c(stream, expr.cons);
         break;
 
@@ -176,7 +176,7 @@ void destroy_expr(struct Expr expr)
         destroy_atom(expr.atom);
         break;
 
-    case EXPR_CONS:
+    case EXPR_EBISP_CONS:
         destroy_cons(expr.cons);
         break;
 
@@ -406,7 +406,7 @@ static int cons_as_sexpr(struct Cons *head, char *output, size_t n)
         return c;
     }
 
-    while (cons->cdr.type == EXPR_CONS) {
+    while (cons->cdr.type == EXPR_EBISP_CONS) {
         cons = cons->cdr.cons;
 
         c += snprintf(output + c, (size_t) (m - c), " ");
@@ -448,7 +448,7 @@ int expr_as_sexpr(struct Expr expr, char *output, size_t n)
     case EXPR_ATOM:
         return atom_as_sexpr(expr.atom, output, n);
 
-    case EXPR_CONS:
+    case EXPR_EBISP_CONS:
         return cons_as_sexpr(expr.cons, output, n);
 
     case EXPR_VOID:
@@ -462,7 +462,7 @@ const char *expr_type_as_string(enum ExprType expr_type)
 {
     switch (expr_type) {
     case EXPR_ATOM: return "EXPR_ATOM";
-    case EXPR_CONS: return "EXPR_CONS";
+    case EXPR_EBISP_CONS: return "EXPR_EBISP_CONS";
     case EXPR_VOID: return "EXPR_VOID";
     }
 

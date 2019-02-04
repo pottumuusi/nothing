@@ -40,7 +40,7 @@ struct EvalResult
 wrong_number_of_arguments(Gc *gc, long int count)
 {
     return eval_failure(
-        CONS(gc,
+        EBISP_CONS(gc,
              SYMBOL(gc, "wrong-number-of-arguments"),
              NUMBER(gc, count)));
 }
@@ -74,7 +74,7 @@ static struct EvalResult eval_atom(Gc *gc, struct Scope *scope, struct Atom *ato
         struct Expr value = get_scope_value(scope, atom_as_expr(atom));
 
         if (nil_p(value)) {
-            return eval_failure(CONS(gc,
+            return eval_failure(EBISP_CONS(gc,
                                      SYMBOL(gc, "void-variable"),
                                      atom_as_expr(atom)));
         }
@@ -83,7 +83,7 @@ static struct EvalResult eval_atom(Gc *gc, struct Scope *scope, struct Atom *ato
     }
     }
 
-    return eval_failure(CONS(gc,
+    return eval_failure(EBISP_CONS(gc,
                              SYMBOL(gc, "unexpected-expression"),
                              atom_as_expr(atom)));
 }
@@ -97,7 +97,7 @@ static struct EvalResult eval_all_args(Gc *gc, struct Scope *scope, struct Expr 
     case EXPR_ATOM:
         return eval_atom(gc, scope, args.atom);
 
-    case EXPR_CONS: {
+    case EXPR_EBISP_CONS: {
         struct EvalResult car = eval(gc, scope, args.cons->car);
         if (car.is_error) {
             return car;
@@ -114,7 +114,7 @@ static struct EvalResult eval_all_args(Gc *gc, struct Scope *scope, struct Expr 
     default: {}
     }
 
-    return eval_failure(CONS(gc,
+    return eval_failure(EBISP_CONS(gc,
                              SYMBOL(gc, "unexpected-expression"),
                              args));
 }
@@ -123,13 +123,13 @@ static struct EvalResult call_lambda(Gc *gc,
                                      struct Expr lambda,
                                      struct Expr args) {
     if (!lambda_p(lambda)) {
-        return eval_failure(CONS(gc,
+        return eval_failure(EBISP_CONS(gc,
                                  SYMBOL(gc, "expected-callable"),
                                  lambda));
     }
 
     if (!list_p(args)) {
-        return eval_failure(CONS(gc,
+        return eval_failure(EBISP_CONS(gc,
                                  SYMBOL(gc, "expected-list"),
                                  args));
     }
@@ -137,7 +137,7 @@ static struct EvalResult call_lambda(Gc *gc,
     struct Expr vars = lambda.atom->lambda.args_list;
 
     if (length_of_list(args) != length_of_list(vars)) {
-        return eval_failure(CONS(gc,
+        return eval_failure(EBISP_CONS(gc,
                                  SYMBOL(gc, "wrong-number-of-arguments"),
                                  NUMBER(gc, length_of_list(args))));
     }
@@ -202,12 +202,12 @@ struct EvalResult eval_block(Gc *gc, struct Scope *scope, struct Expr block)
     struct EvalResult eval_result = eval_success(NIL(gc));
 
     while (cons_p(head)) {
-        eval_result = eval(gc, scope, CAR(head));
+        eval_result = eval(gc, scope, EBISP_CAR(head));
         if (eval_result.is_error) {
             return eval_result;
         }
 
-        head = CDR(head);
+        head = EBISP_CDR(head);
     }
 
     return eval_result;
@@ -219,13 +219,13 @@ struct EvalResult eval(Gc *gc, struct Scope *scope, struct Expr expr)
     case EXPR_ATOM:
         return eval_atom(gc, scope, expr.atom);
 
-    case EXPR_CONS:
+    case EXPR_EBISP_CONS:
         return eval_funcall(gc, scope, expr.cons->car, expr.cons->cdr);
 
     default: {}
     }
 
-    return eval_failure(CONS(gc,
+    return eval_failure(EBISP_CONS(gc,
                              SYMBOL(gc, "unexpected-expression"),
                              expr));
 }
@@ -252,7 +252,7 @@ car(void *param, Gc *gc, struct Scope *scope, struct Expr args)
         return wrong_argument_type(gc, "consp", xs);
     }
 
-    return eval_success(CAR(xs));
+    return eval_success(EBISP_CAR(xs));
 }
 
 struct EvalResult
@@ -268,7 +268,7 @@ match_list(struct Gc *gc, const char *format, struct Expr xs, ...)
             return wrong_argument_type(gc, "consp", xs);
         }
 
-        struct Expr x = CAR(xs);
+        struct Expr x = EBISP_CAR(xs);
 
         switch (*format) {
         case 'd': {
@@ -323,7 +323,7 @@ match_list(struct Gc *gc, const char *format, struct Expr xs, ...)
 
         format++;
         if (!nil_p(xs)) {
-            xs = CDR(xs);
+            xs = EBISP_CDR(xs);
         }
     }
 

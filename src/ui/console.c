@@ -21,21 +21,21 @@
 #define FONT_WIDTH_SCALE 3.0f
 #define FONT_HEIGHT_SCALE 3.0f
 
-#define CONSOLE_LOG_CAPACITY 10
+#define EBISP_CONSOLE_LOG_CAPACITY 10
 #define HISTORY_CAPACITY 20
 #define PROMPT_HEIGHT (FONT_HEIGHT_SCALE * FONT_CHAR_HEIGHT)
-#define CONSOLE_LOG_HEIGHT (FONT_HEIGHT_SCALE * FONT_CHAR_HEIGHT * CONSOLE_LOG_CAPACITY)
+#define EBISP_CONSOLE_LOG_HEIGHT (FONT_HEIGHT_SCALE * FONT_CHAR_HEIGHT * EBISP_CONSOLE_LOG_CAPACITY)
 
-#define CONSOLE_HEIGHT (CONSOLE_LOG_HEIGHT + PROMPT_HEIGHT)
+#define EBISP_CONSOLE_HEIGHT (EBISP_CONSOLE_LOG_HEIGHT + PROMPT_HEIGHT)
 
 #define SLIDE_DOWN_TIME 0.4f
 
-#define CONSOLE_ALPHA (0.80f)
-#define CONSOLE_BACKGROUND (rgba(0.20f, 0.20f, 0.20f, CONSOLE_ALPHA))
-#define CONSOLE_FOREGROUND (rgba(0.80f, 0.80f, 0.80f, CONSOLE_ALPHA))
-#define CONSOLE_ERROR (rgba(0.80f, 0.50f, 0.50f, CONSOLE_ALPHA))
+#define EBISP_CONSOLE_ALPHA (0.80f)
+#define EBISP_CONSOLE_BACKGROUND (rgba(0.20f, 0.20f, 0.20f, EBISP_CONSOLE_ALPHA))
+#define EBISP_CONSOLE_FOREGROUND (rgba(0.80f, 0.80f, 0.80f, EBISP_CONSOLE_ALPHA))
+#define EBISP_CONSOLE_ERROR (rgba(0.80f, 0.50f, 0.50f, EBISP_CONSOLE_ALPHA))
 
-#define CONSOLE_EVAL_RESULT_SIZE 256
+#define EBISP_CONSOLE_EVAL_RESULT_SIZE 256
 
 struct Console
 {
@@ -74,7 +74,7 @@ Console *create_console(Broadcast *broadcast,
         RETURN_LT(lt, NULL);
     }
 
-    console->scope.expr = CONS(console->gc,
+    console->scope.expr = EBISP_CONS(console->gc,
                                NIL(console->gc),
                                NIL(console->gc));
 
@@ -88,7 +88,7 @@ Console *create_console(Broadcast *broadcast,
         create_edit_field(
             font,
             vec(FONT_WIDTH_SCALE, FONT_HEIGHT_SCALE),
-            CONSOLE_FOREGROUND),
+            EBISP_CONSOLE_FOREGROUND),
         destroy_edit_field);
     if (console->edit_field == NULL) {
         RETURN_LT(lt, NULL);
@@ -99,19 +99,19 @@ Console *create_console(Broadcast *broadcast,
         create_console_log(
             font,
             vec(FONT_WIDTH_SCALE, FONT_HEIGHT_SCALE),
-            CONSOLE_LOG_CAPACITY),
+            EBISP_CONSOLE_LOG_CAPACITY),
         destroy_console_log);
 
     console->a = 0;
 
     console->eval_result = PUSH_LT(
         lt,
-        nth_alloc(sizeof(char) * CONSOLE_EVAL_RESULT_SIZE),
+        nth_alloc(sizeof(char) * EBISP_CONSOLE_EVAL_RESULT_SIZE),
         free);
     if (console->eval_result == NULL) {
         RETURN_LT(lt, NULL);
     }
-    memset(console->eval_result, 0, sizeof(char) * CONSOLE_EVAL_RESULT_SIZE);
+    memset(console->eval_result, 0, sizeof(char) * EBISP_CONSOLE_EVAL_RESULT_SIZE);
 
     console->history = PUSH_LT(
         lt,
@@ -139,7 +139,7 @@ static int console_eval_input(Console *console)
         return -1;
     }
 
-    if (console_log_push_line(console->console_log, source_code, CONSOLE_FOREGROUND) < 0) {
+    if (console_log_push_line(console->console_log, source_code, EBISP_CONSOLE_FOREGROUND) < 0) {
         return -1;
     }
 
@@ -148,7 +148,7 @@ static int console_eval_input(Console *console)
                                                                 source_code);
 
         if (parse_result.is_error) {
-            if (console_log_push_line(console->console_log, parse_result.error_message, CONSOLE_ERROR)) {
+            if (console_log_push_line(console->console_log, parse_result.error_message, EBISP_CONSOLE_ERROR)) {
                 return -1;
             }
 
@@ -165,15 +165,15 @@ static int console_eval_input(Console *console)
         if (expr_as_sexpr(
                 eval_result.expr,
                 console->eval_result,
-                CONSOLE_EVAL_RESULT_SIZE) < 0) {
+                EBISP_CONSOLE_EVAL_RESULT_SIZE) < 0) {
             return -1;
         }
 
         if (console_log_push_line(console->console_log,
                           console->eval_result,
                           eval_result.is_error ?
-                          CONSOLE_ERROR :
-                          CONSOLE_FOREGROUND)) {
+                          EBISP_CONSOLE_ERROR :
+                          EBISP_CONSOLE_FOREGROUND)) {
             return -1;
         }
 
@@ -223,13 +223,13 @@ int console_render(const Console *console,
     SDL_RenderGetViewport(renderer, &view_port);
 
     const float e = console->a * (2 - console->a);
-    const float y = -(1.0f - e) * CONSOLE_HEIGHT;
+    const float y = -(1.0f - e) * EBISP_CONSOLE_HEIGHT;
 
     if (fill_rect(renderer,
                   rect(0.0f, y,
                        (float) view_port.w,
-                       CONSOLE_HEIGHT),
-                  CONSOLE_BACKGROUND) < 0) {
+                       EBISP_CONSOLE_HEIGHT),
+                  EBISP_CONSOLE_BACKGROUND) < 0) {
         return -1;
     }
 
@@ -241,7 +241,7 @@ int console_render(const Console *console,
 
     if (edit_field_render(console->edit_field,
                           renderer,
-                          vec(0.0f, y + CONSOLE_LOG_HEIGHT)) < 0) {
+                          vec(0.0f, y + EBISP_CONSOLE_LOG_HEIGHT)) < 0) {
         return -1;
     }
 

@@ -21,7 +21,7 @@ struct Gc
 
 static long int value_of_expr(struct Expr expr)
 {
-    if (expr.type == EXPR_CONS) {
+    if (expr.type == EXPR_EBISP_CONS) {
         return (long int) expr.cons;
     } else if (expr.type == EXPR_ATOM) {
         return (long int) expr.atom;

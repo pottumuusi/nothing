@@ -35,15 +35,15 @@ quasiquote(void *param, Gc *gc, struct Scope *scope, struct Expr args)
     if (!result.is_error && strcmp(unquote, "unquote") == 0) {
         return eval(gc, scope, unquote_expr);
     } else if (cons_p(expr)) {
-        struct EvalResult left = quasiquote(param, gc, scope, CONS(gc, CAR(expr), NIL(gc)));
+        struct EvalResult left = quasiquote(param, gc, scope, EBISP_CONS(gc, EBISP_CAR(expr), NIL(gc)));
         if (left.is_error) {
             return left;
         }
-        struct EvalResult right = quasiquote(param, gc, scope, CONS(gc, CDR(expr), NIL(gc)));
+        struct EvalResult right = quasiquote(param, gc, scope, EBISP_CONS(gc, EBISP_CDR(expr), NIL(gc)));
         if (right.is_error) {
             return right;
         }
-        return eval_success(CONS(gc, left.expr, right.expr));
+        return eval_success(EBISP_CONS(gc, left.expr, right.expr));
     } else {
         return eval_success(expr);
     }
@@ -120,12 +120,12 @@ plus_op(void *param, Gc *gc, struct Scope *scope, struct Expr args)
             return wrong_argument_type(gc, "consp", args);
         }
 
-        if (!number_p(CAR(args))) {
-            return wrong_argument_type(gc, "numberp", CAR(args));
+        if (!number_p(EBISP_CAR(args))) {
+            return wrong_argument_type(gc, "numberp", EBISP_CAR(args));
         }
 
-        result += CAR(args).atom->num;
-        args = CDR(args);
+        result += EBISP_CAR(args).atom->num;
+        args = EBISP_CDR(args);
     }
 
     return eval_success(NUMBER(gc, result));
@@ -145,12 +145,12 @@ mul_op(void *param, Gc *gc, struct Scope *scope, struct Expr args)
             return wrong_argument_type(gc, "consp", args);
         }
 
-        if (!number_p(CAR(args))) {
-            return wrong_argument_type(gc, "numberp", CAR(args));
+        if (!number_p(EBISP_CAR(args))) {
+            return wrong_argument_type(gc, "numberp", EBISP_CAR(args));
         }
 
-        result *= CAR(args).atom->num;
-        args = CDR(args);
+        result *= EBISP_CAR(args).atom->num;
+        args = EBISP_CDR(args);
     }
 
     return eval_success(NUMBER(gc, result));
@@ -359,7 +359,7 @@ append(void *param, Gc *gc, struct Scope *scope, struct Expr args)
         return result;
     }
 
-    return eval_success(CONS(gc, x, result.expr));
+    return eval_success(EBISP_CONS(gc, x, result.expr));
 }
 
 void load_std_library(Gc *gc, struct Scope *scope)

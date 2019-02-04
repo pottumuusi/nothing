@@ -77,7 +77,7 @@ Script *create_script_from_line_stream(LineStream *line_stream, Broadcast *broad
     eval_result = eval(
         script->gc,
         &script->scope,
-        CONS(script->gc,
+        EBISP_CONS(script->gc,
              SYMBOL(script->gc, "begin"),
              parse_result.expr));
     if (eval_result.is_error) {

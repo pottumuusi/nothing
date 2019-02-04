@@ -1,5 +1,5 @@
-#ifndef CONSOLE_LOG_H_
-#define CONSOLE_LOG_H_
+#ifndef EBISP_CONSOLE_LOG_H_
+#define EBISP_CONSOLE_LOG_H_
 
 #include "math/point.h"
 
@@ -18,4 +18,4 @@ int console_log_push_line(Console_Log *console_log,
                           const char *line,
                           Color color);
 
-#endif  // CONSOLE_LOG_H_
+#endif  // EBISP_CONSOLE_LOG_H_

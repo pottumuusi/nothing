@@ -21,25 +21,25 @@ TEST(read_expr_from_file_test)
     struct Expr head = result.expr;
 
     struct Expr expr = head;
-    ASSERT_INTEQ(EXPR_CONS, expr.type);
+    ASSERT_INTEQ(EXPR_EBISP_CONS, expr.type);
     ASSERT_INTEQ(EXPR_ATOM, expr.cons->car.type);
     ASSERT_INTEQ(ATOM_SYMBOL, expr.cons->car.atom->type);
     ASSERT_STREQ("+", expr.cons->car.atom->sym);
 
     expr = expr.cons->cdr;
-    ASSERT_INTEQ(EXPR_CONS, expr.type);
+    ASSERT_INTEQ(EXPR_EBISP_CONS, expr.type);
     ASSERT_INTEQ(EXPR_ATOM, expr.cons->car.type);
     ASSERT_INTEQ(ATOM_NUMBER, expr.cons->car.atom->type);
     ASSERT_LONGINTEQ(1L, expr.cons->car.atom->num);
 
     expr = expr.cons->cdr;
-    ASSERT_INTEQ(EXPR_CONS, expr.type);
+    ASSERT_INTEQ(EXPR_EBISP_CONS, expr.type);
     ASSERT_INTEQ(EXPR_ATOM, expr.cons->car.type);
     ASSERT_INTEQ(ATOM_NUMBER, expr.cons->car.atom->type);
     ASSERT_LONGINTEQ(2L, expr.cons->car.atom->num);
 
     expr = expr.cons->cdr;
-    ASSERT_INTEQ(EXPR_CONS, expr.type);
+    ASSERT_INTEQ(EXPR_EBISP_CONS, expr.type);
     ASSERT_INTEQ(EXPR_ATOM, expr.cons->car.type);
     ASSERT_INTEQ(ATOM_NUMBER, expr.cons->car.atom->type);
     ASSERT_LONGINTEQ(3L, expr.cons->car.atom->num);
