@@ -191,7 +191,7 @@ if(("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" ST
      -Wmissing-field-initializers \
      -fno-common \
      -pedantic \
-     -std=c11 \
+     -std=gnu11 \
      -O3")
   target_link_libraries(nothing m)
 endif()

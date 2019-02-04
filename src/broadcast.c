@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <ecl/ecl.h>
+
 #include "system/stacktrace.h"
 #include "system/nth_alloc.h"
 #include "broadcast.h"
